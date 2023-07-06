@@ -9,6 +9,7 @@
 // @match        https://twitter.com/**
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=twitter.com
 // @grant        GM_xmlhttpRequest
+// @grant        window.onurlchange
 // @run-at       document-start
 // @connect      raw.githubusercontent.com
 // ==/UserScript==
@@ -104,7 +105,7 @@
         threadsIcon.height = 24
 
         const text = document.createElement('span')
-        text.innerText = 'tmd'
+        text.innerText = ''
         text.id = 'tmd'
         Object.assign(text.style, {
           display: 'none',
@@ -143,21 +144,38 @@
     })
   }
 
-  window.addEventListener('load', async () => {
+  let observer
+  function core() {
+    const primaryColumn = document.querySelector('div[data-testid=\'primaryColumn\']')
+    if (primaryColumn) {
+      if (observer)
+        observer.disconnect()
+      observer = new MutationObserver((mutations) => {
+        mutations.forEach((m) => {
+          if (m.target.className === '' && m.target.nodeName === 'DIV' && m.addedNodes && m.addedNodes.length)
+            followingList(m.addedNodes)
+        })
+      })
+      observer.observe(primaryColumn, { childList: true, subtree: true })
+      if (!userList.length)
+        getUserList()
+    }
+  }
+
+  window.addEventListener('load', () => {
     setTimeout(() => {
-      if (window.location.pathname.match(/([^\/]*\/following)/g)) {
-        const primaryColumn = document.querySelector('div[data-testid=\'primaryColumn\']')
-        if (primaryColumn) {
-          const observer = new MutationObserver((mutations) => {
-            mutations.forEach((m) => {
-              if (m.target.className === '' && m.target.nodeName === 'DIV' && m.addedNodes && m.addedNodes.length)
-                followingList(m.addedNodes)
-            })
-          })
-          observer.observe(primaryColumn, { childList: true, subtree: true })
-          getUserList()
-        }
-      }
+      if (window.location.pathname.match(/([^\/]*\/following)/g))
+        core()
     }, 1000)
   })
+
+  if (window.onurlchange === null) {
+    // feature is supported
+    window.addEventListener('urlchange', () => {
+      setTimeout(() => {
+        if (window.location.pathname.match(/([^\/]*\/following)/g))
+          core()
+      }, 1000)
+    })
+  }
 })()
