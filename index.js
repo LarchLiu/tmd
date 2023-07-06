@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         T.M.D
+// @namespace    http://larch.liu/
 // @version      0.0.2
 // @description  T.M.D Social Media
 // @author       Alex Liu (https://github.com/LarchLiu)
