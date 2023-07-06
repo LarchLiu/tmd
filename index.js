@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         T.M.D
-// @version      0.0.1
+// @version      0.0.2
 // @description  T.M.D Social Media
 // @author       Alex Liu (https://github.com/LarchLiu)
 // @license      MIT
