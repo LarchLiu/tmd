@@ -10,7 +10,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=twitter.com
 // @grant        GM_xmlhttpRequest
 // @run-at       document-start
-// @connect      gist.githubusercontent.com
+// @connect      raw.githubusercontent.com
 // ==/UserScript==
 
 (function () {
@@ -86,7 +86,7 @@
 
         const elkIcon = document.createElement('img')
         elkIcon.src = elkSrc
-        elkIcon.height = 24
+        elkIcon.height = 28
 
         const threads = document.createElement('a')
         threads.target = '_blank'
